@@ -5,4 +5,6 @@
 #include "../libmx/inc/libmx.h"
 #include <dirent.h>
 
+char **mx_ls(char *);
+
 #endif

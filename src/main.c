@@ -8,18 +8,13 @@ int main(int argc, char *argv[]) {
     else
         path = mx_strdup(argv[1]);
         
-    struct dirent *entry;
+    char **arr = mx_ls(path);
 
-    DIR *dir = opendir("./");
-    if (!dir) {
-        mx_printerr("error with open file\n");
+    for(int i = 0; arr[i] != NULL; i++) {
+        mx_printstr(arr[i]);
+        mx_printstr("\t\t");
     }
-
-    while ((entry = readdir(dir)) != NULL) {
-        if(entry->d_name[0] != '.') {
-            mx_printstr(entry->d_name);
-            mx_printstr("             ");
-        }
-    }
+    
+    
     
 }
