@@ -7,4 +7,6 @@
 
 char **mx_ls(char *);
 
+void clean_str_arr(char **);
+
 #endif

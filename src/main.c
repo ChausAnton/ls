@@ -1,5 +1,14 @@
 #include "../inc/uls.h"
 
+void clean_str_arr(char **arr) {
+    for(int i = 0; arr[i] != NULL; i++) {
+        free(arr[i]);
+        arr[i] = NULL;
+    }
+    free(arr);
+    arr = NULL;
+}
+
 int main(int argc, char *argv[]) {
 
     char *path;
@@ -12,9 +21,9 @@ int main(int argc, char *argv[]) {
 
     for(int i = 0; arr[i] != NULL; i++) {
         mx_printstr(arr[i]);
-        mx_printstr("\t\t");
+        mx_printstr("\t");
     }
-    
-    
-    
+
+    clean_str_arr(arr);
 }
+

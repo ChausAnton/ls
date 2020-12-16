@@ -38,5 +38,4 @@ char **mx_ls(char *path) {
     }
 
     return files;
-    
 }
