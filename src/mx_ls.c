@@ -1,5 +1,18 @@
 #include "../inc/uls.h"
 
+void mx_sort_ls(char **files) {
+	for (int i = 0;files[i] != NULL; i++) {
+		for (int j = 0;files[j] != NULL; j++) {
+			if (mx_strcmp(files[i], files[j]) < 0) {
+				void *tmp = files[i];
+				files[i] = files[j];
+				files[j] = tmp;
+				
+			}
+		}
+	}
+}
+
 char **mx_ls(char *path) {
     size_t size = 0;
 
@@ -35,6 +48,18 @@ char **mx_ls(char *path) {
             files[i] = mx_strdup(entry->d_name);
             i++;
         }
+    }
+
+    mx_sort_ls(files);
+
+    for(int i = 0; files[i] != NULL; i++) {
+        if(i != 0) {
+            int word_len = mx_strlen(files[i - 1]);
+            for(int j = 0; j < (15 - word_len) + 1; j++) {
+                mx_printstr(" ");
+            }
+        }
+        mx_printstr(files[i]);
     }
 
     return files;

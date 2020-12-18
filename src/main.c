@@ -19,11 +19,6 @@ int main(int argc, char *argv[]) {
         
     char **arr = mx_ls(path);
 
-    for(int i = 0; arr[i] != NULL; i++) {
-        mx_printstr(arr[i]);
-        mx_printstr("\t");
-    }
-
     clean_str_arr(arr);
 }
 
