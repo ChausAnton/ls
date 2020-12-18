@@ -52,37 +52,67 @@ void print_grup(struct stat *Stat) {
     }
 }
 
+void mx_print_time(struct stat *Stat) {
+    char *t = ctime(&Stat->st_mtime);
+    int i = 0;
+    if (1565913600 >= Stat->st_mtime) {
+        for(i = 4; i < 10; i++)
+            mx_printchar(t[i]);
+        mx_printstr("  ");
+        for (i = 20; i < 24; i++)
+            mx_printchar(t[i]); 
+    }
+    else {
+        for(i = 4; i < 16; i++)
+            mx_printchar(t[i]);
+    }
+    mx_printstr(" ");
+
+}
+
 void mx_ls_l(char **files) {
-    struct stat Stat;
-
-    /*for(int i = 0; files[i] != NULL; i++) {
-        if(i != 0) {
-            int word_len = mx_strlen(files[i - 1]);
-            for(int j = 0; j < (15 - word_len) + 1; j++) {
-                mx_printstr(" ");
-            }
-        }
-        mx_printstr(files[i]);
-    }*/
-
+    unsigned int total = 0;
+    for(int i = 0; files[i] != NULL; i++) {
+        struct stat Stat;
     
-    int check = lstat(files[0], &Stat);
+        int check = lstat(files[i], &Stat);
 
-    if(check == -1) {
-        mx_printerr("problem with reading stats\n");
-        exit(0);
+        if(check == -1) {
+            mx_printerr("problem with reading stats\n");
+            exit(0);
+        }
+
+        total += Stat.st_blocks;
     }
 
-    mx_print_per(&Stat);
-    mx_printstr("  ");
-    mx_printint(Stat.st_nlink);
-    mx_printstr(" ");
-    print_name(&Stat);
-    mx_printstr("  ");
-    print_grup(&Stat);
-    mx_printstr("  ");
-    mx_printstr(mx_itoa(Stat.st_size));
-    mx_printstr("  ");
-    mx_printstr(mx_itoa(Stat.st_ctime));
+    mx_printstr("total ");
+    mx_printint(total);
+    mx_printstr("\n");
+
+    for(int i = 0; files[i] != NULL; i++) {
+        struct stat Stat;
+    
+        int check = lstat(files[i], &Stat);
+
+        if(check == -1) {
+            mx_printerr("problem with reading stats\n");
+            exit(0);
+        }
+
+        mx_print_per(&Stat);
+        mx_printstr("  ");
+        mx_printint(Stat.st_nlink);
+        mx_printstr(" ");
+        print_name(&Stat);
+        mx_printstr("  ");
+        print_grup(&Stat);
+        mx_printstr("  ");
+        mx_printstr(mx_itoa(Stat.st_size));
+        mx_printstr("  ");
+        mx_print_time(&Stat);
+        mx_printstr("  ");
+        mx_printstr(files[i]);
+        mx_printstr("\n");
+    }
     
 }

@@ -50,6 +50,10 @@ char **mx_ls(char *path) {
         }
     }
 
+    if(closedir(dir) == -1) {
+        mx_printerr("error while close file\n");
+    }
+
     mx_sort_ls(files);
 
     return files;

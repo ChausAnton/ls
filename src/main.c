@@ -12,7 +12,7 @@ void clean_str_arr(char **arr) {
 int main(int argc, char *argv[]) {
 
     char *path;
-    if(argc == 2 && argv[0][0] != '\0')
+    if(argc >= 1 && argv[0][0] != '\0')
         path = mx_strdup("./");
     else
         path = mx_strdup(argv[1]);
