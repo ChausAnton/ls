@@ -52,15 +52,5 @@ char **mx_ls(char *path) {
 
     mx_sort_ls(files);
 
-    for(int i = 0; files[i] != NULL; i++) {
-        if(i != 0) {
-            int word_len = mx_strlen(files[i - 1]);
-            for(int j = 0; j < (15 - word_len) + 1; j++) {
-                mx_printstr(" ");
-            }
-        }
-        mx_printstr(files[i]);
-    }
-
     return files;
 }
