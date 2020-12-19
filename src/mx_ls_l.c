@@ -18,9 +18,8 @@ static char mx_check_per(struct stat *Stat) {
     return '-';
 }
 
-void mx_print_per(struct stat *Stat) {
-    char chmod[11];
-
+char *mx_str_per(struct stat *Stat) {
+    char *chmod = (char *) malloc(11 * sizeof(char));
     chmod[0] = mx_check_per(Stat);
     chmod[1] = (S_IRUSR & Stat->st_mode) ? 'r' : '-';
     chmod[2] = (S_IWUSR & Stat->st_mode) ? 'w' : '-';
@@ -32,28 +31,26 @@ void mx_print_per(struct stat *Stat) {
     chmod[8] = (S_IWOTH & Stat->st_mode) ? 'w' : '-';
     chmod[9] = (S_IXOTH & Stat->st_mode) ? 'x' : '-';
     chmod[10] = '\0';
-
-    mx_printstr(chmod);
-
-
+    return chmod;
 }
 
-void print_name(struct stat *Stat) {
+char *str_name(struct stat *Stat) {
     struct passwd *pw = getpwuid(Stat->st_uid);
     if (pw) {
-        mx_printstr(pw->pw_name);
+        return mx_strdup(pw->pw_name);
     }
+    return NULL;
 }
 
-void print_grup(struct stat *Stat) {
+char *print_grup(struct stat *Stat) {
     struct group *grp = getgrgid(Stat->st_gid);
     if (grp) {
-        mx_printstr(grp->gr_name);
+        return mx_strdup(grp->gr_name);
     }
+    return NULL;
 }
 
-void mx_print_time(struct stat *Stat) {
-    char *t = ctime(&Stat->st_mtime);
+void mx_print_time(char *t, struct stat *Stat) {
     int i = 0;
     if (1565913600 >= Stat->st_mtime) {
         for(i = 4; i < 10; i++)
@@ -71,6 +68,7 @@ void mx_print_time(struct stat *Stat) {
 }
 
 void mx_ls_l(char **files) {
+    size_t size = 1;
     unsigned int total = 0;
     for(int i = 0; files[i] != NULL; i++) {
         struct stat Stat;
@@ -81,9 +79,15 @@ void mx_ls_l(char **files) {
             mx_printerr("problem with reading stats\n");
             exit(0);
         }
-
+        size++;
         total += Stat.st_blocks;
     }
+
+    s_ls_l **ls_l = (s_ls_l **) malloc(size * sizeof(s_ls_l *));
+    for(size_t i = 0; i < size; i++) {
+        ls_l[i] = (s_ls_l *) malloc(sizeof(s_ls_l));
+    }
+    ls_l[size - 1] = NULL;
 
     mx_printstr("total ");
     mx_printint(total);
@@ -98,21 +102,33 @@ void mx_ls_l(char **files) {
             mx_printerr("problem with reading stats\n");
             exit(0);
         }
+        ls_l[i]->stat = Stat;
+        ls_l[i]->chmod = mx_str_per(&Stat);
+        ls_l[i]->nlink = mx_itoa(Stat.st_nlink);
+        ls_l[i]->name = str_name(&Stat);
+        ls_l[i]->grup = print_grup(&Stat);
+        ls_l[i]->size = mx_itoa(Stat.st_size);
+        ls_l[i]->time = ctime(&Stat.st_mtime);
+        ls_l[i]->file_name = mx_strdup(files[i]);
+    }
 
-        mx_print_per(&Stat);
+    for(size_t i = 0; ls_l[i] != NULL; i++) {
+        mx_printstr(ls_l[i]->chmod);
         mx_printstr("  ");
-        mx_printint(Stat.st_nlink);
-        mx_printstr(" ");
-        print_name(&Stat);
+        mx_printstr(ls_l[i]->nlink);
         mx_printstr("  ");
-        print_grup(&Stat);
+        mx_printstr(ls_l[i]->name);
         mx_printstr("  ");
-        mx_printstr(mx_itoa(Stat.st_size));
+        mx_printstr(ls_l[i]->grup);
         mx_printstr("  ");
-        mx_print_time(&Stat);
+        mx_printstr(ls_l[i]->size);
         mx_printstr("  ");
-        mx_printstr(files[i]);
+        mx_print_time(ls_l[i]->time, &ls_l[i]->stat);
+        mx_printstr("  ");
+        mx_printstr(ls_l[i]->file_name);
         mx_printstr("\n");
     }
+
+
     
 }

@@ -16,15 +16,16 @@
 #include <dirent.h>
 #include <string.h>
 
-#define IS_BLK(mode) (((mode) & S_IFMT) == S_IFBLK)
-#define IS_CHR(mode) (((mode) & S_IFMT) == S_IFCHR)
-#define IS_DIR(mode) (((mode) & S_IFMT) == S_IFDIR)
-#define IS_LNK(mode) (((mode) & S_IFMT) == S_IFLNK)
-#define IS_SOCK(mode) (((mode) & S_IFMT) == S_IFSOCK)
-#define IS_FIFO(mode) (((mode) & S_IFMT) == S_IFIFO)
-#define IS_WHT(mode) (((mode) & S_IFMT) == S_IFWHT)
-#define IS_REG(mode) (((mode) & S_IFMT) == S_IFREG)
-#define IS_EXEC(mode) ((mode) & S_IXUSR)
+typedef struct t_ls_l {
+    struct stat stat;
+    char *chmod;
+    char *nlink;
+    char *name;
+    char *grup;
+    char *size;
+    char *time;
+    char *file_name;
+}   s_ls_l;
 
 char **mx_ls(char *);
 
