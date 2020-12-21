@@ -20,10 +20,10 @@ int main(int argc, char *argv[]) {
     } else if (argc == 3 && argv[1][0] != '-' && argv[2][0] == '-'){
         path = mx_strdup(argv[1]);
     } else if (argc >= 3 && argv[1][0] != '-' && argv[2][0] != '-' && argv[argc-1][0] != '-'){
-        printf("\n%d argc without flags\n\n", argc-1);
+        printf("%d argc without\n%s\n\n", argc-1);
         exit(0);
-    } else if (argc >= 4 && argv[1][0] != '-' && argv[2][0] != '-' && argv[argc-1][0] == '-'){
-        printf("\n%d argc with flags\n\n", argc-2);
+    } else if (argc >= 3 && argv[1][0] != '-' && argv[2][0] != '-' && argv[argc-1][0] == '-'){
+        printf("%d argc with\n%s\n\n", argc-2);
         exit(0);
     }
         
