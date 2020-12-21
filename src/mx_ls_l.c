@@ -112,23 +112,6 @@ void mx_ls_l(char **files) {
         ls_l[i]->file_name = mx_strdup(files[i]);
     }
 
-    for(size_t i = 0; ls_l[i] != NULL; i++) {
-        mx_printstr(ls_l[i]->chmod);
-        mx_printstr("  ");
-        mx_printstr(ls_l[i]->nlink);
-        mx_printstr("  ");
-        mx_printstr(ls_l[i]->name);
-        mx_printstr("  ");
-        mx_printstr(ls_l[i]->grup);
-        mx_printstr("  ");
-        mx_printstr(ls_l[i]->size);
-        mx_printstr("  ");
-        mx_print_time(ls_l[i]->time, &ls_l[i]->stat);
-        mx_printstr("  ");
-        mx_printstr(ls_l[i]->file_name);
-        mx_printstr("\n");
-    }
+    print_ls_l(ls_l);
 
-
-    
 }
