@@ -18,7 +18,7 @@ static char mx_check_per(struct stat *Stat) {
     return '-';
 }
 
-char *mx_str_per(struct stat *Stat) {
+char *mx_str_per(struct stat *Stat, char *file) {
     char *chmod = (char *) malloc(11 * sizeof(char));
     chmod[0] = mx_check_per(Stat);
     chmod[1] = (S_IRUSR & Stat->st_mode) ? 'r' : '-';
@@ -30,7 +30,13 @@ char *mx_str_per(struct stat *Stat) {
     chmod[7] = (S_IROTH & Stat->st_mode) ? 'r' : '-';
     chmod[8] = (S_IWOTH & Stat->st_mode) ? 'w' : '-';
     chmod[9] = (S_IXOTH & Stat->st_mode) ? 'x' : '-';
-    chmod[10] = '\0';
+    if (listxattr(file, NULL, 0, XATTR_NOFOLLOW) > 0) {
+        chmod[10] = '@';
+        chmod[11] = '\0';
+    }
+    else  
+        chmod[10] = '\0';
+
     return chmod;
 }
 
@@ -101,7 +107,7 @@ void mx_ls_l(char **files) {
             exit(0);
         }
         ls_l[i]->stat = Stat;
-        ls_l[i]->chmod = mx_str_per(&Stat);
+        ls_l[i]->chmod = mx_str_per(&Stat, files[i]);
         ls_l[i]->nlink = mx_itoa(Stat.st_nlink);
         ls_l[i]->name = str_name(&Stat);
         ls_l[i]->grup = print_grup(&Stat);
