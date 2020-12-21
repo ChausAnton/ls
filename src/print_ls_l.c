@@ -1,5 +1,18 @@
 #include "../inc/uls.h"
 
+void clean_mx_ls_l(s_ls_l **ls_l) {
+    for(int i = 0; ls_l[i] != NULL; i++) {
+        mx_strdel(&ls_l[i]->chmod);
+        mx_strdel(&ls_l[i]->nlink);
+        mx_strdel(&ls_l[i]->name);
+        mx_strdel(&ls_l[i]->grup);
+        mx_strdel(&ls_l[i]->size);
+        mx_strdel(&ls_l[i]->file_name);
+        free(ls_l[i]);
+    }
+    free(ls_l);
+}
+
 void print_ls_l(struct t_ls_l **ls_l){
      int size_size = mx_strlen(ls_l[0]->size);
     for(size_t i = 1; ls_l[i] != NULL; i++) {
@@ -65,4 +78,5 @@ void print_ls_l(struct t_ls_l **ls_l){
         mx_printstr(ls_l[i]->file_name);
         mx_printstr("\n");
     }
+    clean_mx_ls_l(ls_l);
 }

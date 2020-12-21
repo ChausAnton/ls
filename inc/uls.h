@@ -11,7 +11,6 @@ typedef struct t_ls_l {
     char *name;
     char *grup;
     char *size;
-    char *time;
     char *file_name;
 }   s_ls_l;
 

@@ -2,8 +2,7 @@
 
 void clean_str_arr(char **arr) {
     for(int i = 0; arr[i] != NULL; i++) {
-        free(arr[i]);
-        arr[i] = NULL;
+        mx_strdel(&arr[i]);
     }
     free(arr);
     arr = NULL;
@@ -21,9 +20,8 @@ int main(int argc, char *argv[]) {
 
     if(mx_strcmp(argv[argc - 1], "-l") == 0) {
         mx_ls_l(arr);
-        exit(0);
     }
-
+    else {
     int size = 0;
     for(int i = 0; arr[i] != NULL; i++) {
         if(size < mx_strlen(arr[i])) {
@@ -40,7 +38,7 @@ int main(int argc, char *argv[]) {
         mx_printstr(arr[i]);
         mx_printstr("\n");
     }
-
+    }
     clean_str_arr(arr);
 }
 

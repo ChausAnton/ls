@@ -1,6 +1,6 @@
 #include "../inc/uls.h"
 
-static char mx_check_per(struct stat *Stat) {
+char mx_check_per(struct stat *Stat) {
     if ((Stat->st_mode & S_IFMT) == S_IFDIR)
         return 'd';
     if ((Stat->st_mode & S_IFMT) == S_IFLNK)
@@ -32,7 +32,7 @@ char mx_listxattr(char *file) {
 }
 
 char *mx_str_per(struct stat *Stat, char *file) {
-    char *chmod = (char *) malloc(11 * sizeof(char));
+    char chmod[12];
     chmod[0] = mx_check_per(Stat);
     chmod[1] = (S_IRUSR & Stat->st_mode) ? 'r' : '-';
     chmod[2] = (S_IWUSR & Stat->st_mode) ? 'w' : '-';
@@ -45,7 +45,9 @@ char *mx_str_per(struct stat *Stat, char *file) {
     chmod[9] = (S_IXOTH & Stat->st_mode) ? 'x' : '-';
     chmod[10] = mx_listxattr(file);
     chmod[11] = '\0';
-    return chmod;
+    
+    char *tmp = mx_strdup(chmod);
+    return tmp;
 }
 
 char *str_name(struct stat *Stat) {
@@ -115,7 +117,7 @@ void mx_ls_l(char **files) {
             exit(0);
         }
         ls_l[i]->stat = Stat;
-        ls_l[i]->chmod = mx_str_per(&Stat, files[i]);
+        ls_l[i]->chmod = mx_strdup(mx_str_per(&Stat, files[i]));
         ls_l[i]->nlink = mx_itoa(Stat.st_nlink);
         ls_l[i]->name = str_name(&Stat);
         ls_l[i]->grup = print_grup(&Stat);
