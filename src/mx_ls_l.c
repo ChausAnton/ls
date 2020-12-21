@@ -52,19 +52,17 @@ char *print_grup(struct stat *Stat) {
 
 void mx_print_time(char *t, struct stat *Stat) {
     int i = 0;
-    if (1565913600 >= Stat->st_mtime) {
-        for(i = 4; i < 10; i++)
-            mx_printchar(t[i]);
-        mx_printstr("  ");
-        for (i = 20; i < 24; i++)
-            mx_printchar(t[i]); 
-    }
-    else {
-        for(i = 4; i < 16; i++)
-            mx_printchar(t[i]);
-    }
+        if (1565913600 >= Stat->st_mtime) {
+            for(i = 4; i < 10; i++)
+                mx_printchar(t[i]);
+            mx_printstr("  ");
+            for (i = 20; i < 24; i++)
+                mx_printchar(t[i]); 
+        }
+        else
+            for(i = 4; i < 16; i++)
+                mx_printchar(t[i]);
     mx_printstr(" ");
-
 }
 
 void mx_ls_l(char **files) {
@@ -108,10 +106,7 @@ void mx_ls_l(char **files) {
         ls_l[i]->name = str_name(&Stat);
         ls_l[i]->grup = print_grup(&Stat);
         ls_l[i]->size = mx_itoa(Stat.st_size);
-        ls_l[i]->time = ctime(&Stat.st_mtime);
         ls_l[i]->file_name = mx_strdup(files[i]);
     }
-
     print_ls_l(ls_l);
-
 }

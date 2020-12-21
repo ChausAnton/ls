@@ -61,8 +61,7 @@ void print_ls_l(struct t_ls_l **ls_l){
         }
         mx_printstr(ls_l[i]->size);
         mx_printstr(" ");
-        mx_print_time(ls_l[i]->time, &ls_l[i]->stat);
-        //mx_printstr("");
+        mx_print_time(ctime(&ls_l[i]->stat.st_mtime), &ls_l[i]->stat);
         mx_printstr(ls_l[i]->file_name);
         mx_printstr("\n");
     }
