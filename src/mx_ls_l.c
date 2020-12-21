@@ -18,6 +18,19 @@ static char mx_check_per(struct stat *Stat) {
     return '-';
 }
 
+char mx_listxattr(char *file) {
+    acl_t temp;
+
+    if (listxattr(file, NULL, 0, XATTR_NOFOLLOW) > 0) {
+        return '@';
+    }
+    if ((temp = acl_get_file(file, ACL_TYPE_EXTENDED))) {
+        acl_free(temp);
+        return ('+');
+    }
+    return (' ');
+}
+
 char *mx_str_per(struct stat *Stat, char *file) {
     char *chmod = (char *) malloc(11 * sizeof(char));
     chmod[0] = mx_check_per(Stat);
@@ -30,13 +43,8 @@ char *mx_str_per(struct stat *Stat, char *file) {
     chmod[7] = (S_IROTH & Stat->st_mode) ? 'r' : '-';
     chmod[8] = (S_IWOTH & Stat->st_mode) ? 'w' : '-';
     chmod[9] = (S_IXOTH & Stat->st_mode) ? 'x' : '-';
-    if (listxattr(file, NULL, 0, XATTR_NOFOLLOW) > 0) {
-        chmod[10] = '@';
-        chmod[11] = '\0';
-    }
-    else  
-        chmod[10] = '\0';
-
+    chmod[10] = mx_listxattr(file);
+    chmod[11] = '\0';
     return chmod;
 }
 
