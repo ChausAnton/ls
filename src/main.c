@@ -29,7 +29,13 @@ int main(int argc, char *argv[]) {
         
     char **arr = mx_ls(path);
 
+    
+
     if(mx_strcmp(argv[argc - 1], "-l") == 0) {
+        path = mx_strjoin(path, "/");
+        for(int i = 0; arr[i] != NULL; i++) {
+            arr[i] = mx_strjoin(path, arr[i]);
+        }
         mx_ls_l(arr);
     }
     else {
