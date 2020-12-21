@@ -24,14 +24,21 @@ int main(int argc, char *argv[]) {
         exit(0);
     }
 
+    int size = 0;
     for(int i = 0; arr[i] != NULL; i++) {
-        if(i != 0) {
-            int word_len = mx_strlen(arr[i - 1]);
-            for(int j = 0; j < (15 - word_len) + 1; j++) {
-                mx_printstr(" ");
-            }
+        if(size < mx_strlen(arr[i])) {
+            size = mx_strlen(arr[i]);
         }
+    }
+
+    while (size % 4 != 0) {
+        size++;
+    }
+    size = size / 4;
+    
+    for(int i = 0; arr[i] != NULL; i++) {
         mx_printstr(arr[i]);
+        mx_printstr("\n");
     }
 
     clean_str_arr(arr);
