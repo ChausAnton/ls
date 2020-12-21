@@ -45,7 +45,6 @@ char *mx_str_per(struct stat *Stat, char *file) {
     chmod[9] = (S_IXOTH & Stat->st_mode) ? 'x' : '-';
     chmod[10] = mx_listxattr(file);
     chmod[11] = '\0';
-    
     char *tmp = mx_strdup(chmod);
     return tmp;
 }

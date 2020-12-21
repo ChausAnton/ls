@@ -10,11 +10,22 @@ void clean_str_arr(char **arr) {
 
 int main(int argc, char *argv[]) {
 
-    char *path;
-    if(argc >= 1 && argv[0][0] != '\0')
+    char *path = NULL;
+    if(argc == 1){
         path = mx_strdup("./");
-    else
+    } else if (argc == 2 && argv[1][0] == '-'){
+        path = mx_strdup("./");
+    } else if (argc == 2 && argv[1][0] != '-'){
         path = mx_strdup(argv[1]);
+    } else if (argc == 3 && argv[1][0] != '-' && argv[2][0] == '-'){
+        path = mx_strdup(argv[1]);
+    } else if (argc >= 3 && argv[1][0] != '-' && argv[2][0] != '-' && argv[argc-1][0] != '-'){
+        printf("\n%d argc without flags\n\n", argc-1);
+        exit(0);
+    } else if (argc >= 4 && argv[1][0] != '-' && argv[2][0] != '-' && argv[argc-1][0] == '-'){
+        printf("\n%d argc with flags\n\n", argc-2);
+        exit(0);
+    }
         
     char **arr = mx_ls(path);
 
