@@ -8,6 +8,22 @@ void clean_str_arr(char **arr) {
     arr = NULL;
 }
 
+void mx_sort_by_dir(char **paths){
+    for (int i = 0; paths[i] != NULL; i++) {
+		for (int j = 0; paths[j+1] != NULL; j++) {
+            struct stat temp;
+            struct stat temp1;
+            stat(paths[j], &temp);
+            stat(paths[j+1], &temp1);
+            if(S_ISDIR(temp.st_mode) && !S_ISDIR(temp1.st_mode)) {  
+                void *tmp = paths[j];
+				paths[j] = paths[j+1];
+				paths[j+1] = tmp;
+            }   
+		}
+	}   
+}
+
 int main(int argc, char *argv[]) {
     
     char *legal_flags = mx_strdup("l");
@@ -30,7 +46,7 @@ int main(int argc, char *argv[]) {
         paths[0] = mx_strdup("./");
     }
     if(argc == 2) {
-        if(mx_strcmp(argv[1], "-l") == 0) {
+        if((argv[1][0] == '-' && argv[1][1] == 'l')) {
             paths[0] = mx_strdup("./");
         }
         else {
@@ -40,13 +56,12 @@ int main(int argc, char *argv[]) {
     if(argc > 2) {
         int j = 0;
         int i = 0;
-        if (argc > 1 && mx_strcmp(argv[1], "-l") == 0) {
+        if (argc > 1 && (argv[1][0] == '-' && argv[1][1] == 'l')) {
             i = 2;
         }
         else{
             i = 1;
         }
-
         for(; i < argc; i++) {
             paths[j] = mx_strdup(argv[i]);
             j++;
@@ -54,6 +69,8 @@ int main(int argc, char *argv[]) {
     }
 
     mx_sort_ls(paths);
+    mx_sort_by_dir(paths);
+    
     for(int g = 0; paths[g] != NULL; g++) {
         struct stat temp;
         if(stat(paths[g], &temp) == -1) {
@@ -62,9 +79,11 @@ int main(int argc, char *argv[]) {
             mx_printerr(": No such file or directory\n");
             continue;
         }
-        if(S_ISDIR(temp.st_mode)) {  
+        if(S_ISDIR(temp.st_mode)) {
+            //arr = mx_ls(paths[g]);   
             continue;
-        } else if (argc > 1 && mx_strcmp(argv[1], "-l") != 0) {
+        }
+        else if (argc > 1 && (argv[1][0] != '-' || argv[1][1] != 'l')) {
             mx_printstr(paths[g]);
             mx_printstr("\n");
             continue;
@@ -81,10 +100,8 @@ int main(int argc, char *argv[]) {
         char **arr = NULL;
         if(S_ISDIR(temp.st_mode)) {
             arr = mx_ls(paths[g]);   
-            //continue;
-        } else if (argc > 1 && mx_strcmp(argv[1], "-l") != 0) {
-            //mx_printstr(paths[g]);
-            //mx_printstr("\n");
+        }
+        else if (argc > 1 && (argv[1][0] != '-' || argv[1][1] != 'l')) {
             continue;
         }
                 
@@ -92,7 +109,7 @@ int main(int argc, char *argv[]) {
             mx_printstr(paths[g]);
             mx_printstr(":\n");
         }
-        if(argc > 1 && mx_strcmp(argv[1], "-l") == 0) {
+        if(argc > 1 && (argv[1][0] == '-' && argv[1][1] == 'l')) {
             bool total = false;
             if(S_ISDIR(temp.st_mode)) {
                 paths[g] = mx_strjoin(paths[g], "/");
