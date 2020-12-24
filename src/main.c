@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
         else if (argc > 1 && (argv[1][0] != '-' || argv[1][1] != 'l')) {
             mx_printstr(paths[g]);
             mx_printstr("\n");
-            
+           
             struct stat tmp_check;
             stat(paths[g+1], &tmp_check);
             if(!S_ISDIR(temp.st_mode) && S_ISDIR(tmp_check.st_mode)) {
@@ -108,9 +108,25 @@ int main(int argc, char *argv[]) {
                 total = true;
             }
             else{
-                arr = (char **) malloc(2 *  sizeof(char *));
-                arr[1] = NULL;
-                arr[0] = mx_strdup(paths[g]);
+                int size = 0;
+                for (int i = 0; paths[i] != NULL; i++) {
+                    struct stat temp;
+                    stat(paths[i], &temp);
+                    if(!S_ISDIR(temp.st_mode)) {
+                        size++;
+                    }
+                    else {
+                        break;
+                    }
+                    
+                }
+                arr = (char **) malloc((size + 1) *  sizeof(char *));
+                for (int i = 0; i < size; i++) {
+                    arr[i] = mx_strdup(paths[g]);
+                    g++;
+                }
+                g--;
+                arr[size] = NULL;
             }
             
             mx_ls_l(arr, total);
