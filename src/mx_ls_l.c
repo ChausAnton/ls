@@ -80,12 +80,18 @@ void mx_print_time(char *t, struct stat *Stat) {
     mx_printstr(" ");
 }
 
-void mx_ls_l(char **files) {
+int mx_arr_size(char **arr) {
+    int i = 0;
+    for(;arr[i] != NULL; i++);
+    return i;
+}
+
+void mx_ls_l(char **files, bool istotal) {
     size_t size = 1;
     unsigned int total = 0;
     for(int i = 0; files[i] != NULL; i++) {
         struct stat Stat;
-    
+
         int check = lstat(files[i], &Stat);
 
         if(check == -1) {
@@ -102,9 +108,11 @@ void mx_ls_l(char **files) {
     }
     ls_l[size - 1] = NULL;
 
-    mx_printstr("total ");
-    mx_printint(total);
-    mx_printstr("\n");
+    if(istotal) {
+        mx_printstr("total ");
+        mx_printint(total);
+        mx_printstr("\n");
+    }
 
     for(int i = 0; files[i] != NULL; i++) {
         struct stat Stat;
@@ -121,7 +129,11 @@ void mx_ls_l(char **files) {
         ls_l[i]->name = str_name(&Stat);
         ls_l[i]->grup = print_grup(&Stat);
         ls_l[i]->size = mx_itoa(Stat.st_size);
-        ls_l[i]->file_name = mx_strdup(files[i]);
+
+        char **temp = mx_strsplit(files[i], '/');
+        ls_l[i]->file_name = mx_strdup(temp[mx_arr_size(temp) - 1]);
+
+        clean_str_arr(temp);
     }
     print_ls_l(ls_l);
 }
