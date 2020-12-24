@@ -79,29 +79,13 @@ int main(int argc, char *argv[]) {
             mx_printerr(": No such file or directory\n");
             continue;
         }
-        if(S_ISDIR(temp.st_mode)) {
-            //arr = mx_ls(paths[g]);   
-            continue;
-        }
-        else if (argc > 1 && (argv[1][0] != '-' || argv[1][1] != 'l')) {
-            mx_printstr(paths[g]);
-            mx_printstr("\n");
-            continue;
-        }
-    }
-    for(int g = 0; paths[g] != NULL; g++) {
-        struct stat temp;
-        if(stat(paths[g], &temp) == -1) {
-            mx_printerr("uls: ");
-            mx_printerr(paths[g]);
-            mx_printerr(": No such file or directory\n");
-            continue;
-        }
         char **arr = NULL;
         if(S_ISDIR(temp.st_mode)) {
             arr = mx_ls(paths[g]);   
         }
         else if (argc > 1 && (argv[1][0] != '-' || argv[1][1] != 'l')) {
+            mx_printstr(paths[g]);
+            mx_printstr("\n");
             continue;
         }
                 
@@ -119,9 +103,25 @@ int main(int argc, char *argv[]) {
                 total = true;
             }
             else{
-                arr = (char **) malloc(2 *  sizeof(char *));
-                arr[1] = NULL;
-                arr[0] = mx_strdup(paths[g]);
+                int size = 0;
+                for (int i = 0; paths[i] != NULL; i++) {
+                    struct stat temp;
+                    stat(paths[i], &temp);
+                    if(!S_ISDIR(temp.st_mode)) {
+                        size++;
+                    }
+                    else {
+                        break;
+                    }
+                    
+                }
+                arr = (char **) malloc((size + 1) *  sizeof(char *));
+                for (int i = 0; i < size; i++) {
+                    arr[i] = mx_strdup(paths[g]);
+                    g++;
+                }
+                g--;
+                arr[size] = NULL;
             }
             
             mx_ls_l(arr, total);
