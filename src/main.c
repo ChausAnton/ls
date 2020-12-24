@@ -14,9 +14,9 @@ int main(int argc, char *argv[]) {
     if(argc > 1 && argv[1][0] == '-') {
         for(int i =1; argv[1][i]; i++){
             if(mx_get_char_index(legal_flags ,argv[1][i]) == -1){
-                mx_printerr("ls: illegal option -- ");
-                mx_printerr(&argv[1][i]);
-                mx_printerr("\nusage: ./uls [-l] [file ...]\n");
+                mx_printerr("uls: illegal option -- ");
+                write(2, &argv[1][i], 1);
+                mx_printerr("\nusage: uls [-l] [file ...]\n");
                 exit(0);
             }
         }
@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
         paths[0] = mx_strdup("./");
     }
     if(argc == 2) {
-        if(argv[1][0] ==  '-') {
+        if(mx_strcmp(argv[1], "-l") == 0) {
             paths[0] = mx_strdup("./");
         }
         else {
@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
     if(argc > 2) {
         int j = 0;
         int i = 0;
-        if (argc > 1 && argv[1][0] ==  '-') {
+        if (argc > 1 && mx_strcmp(argv[1], "-l") == 0) {
             i = 2;
         }
         else{
@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
     for(int g = 0; paths[g] != NULL; g++) {
         struct stat temp;
         if(stat(paths[g], &temp) == -1) {
-            mx_printerr("ls: ");
+            mx_printerr("uls: ");
             mx_printerr(paths[g]);
             mx_printerr(": No such file or directory\n");
             continue;
@@ -69,6 +69,7 @@ int main(int argc, char *argv[]) {
         }
         else if (argc > 1 && mx_strcmp(argv[1], "-l") != 0) {
             mx_printstr(paths[g]);
+            mx_printstr("\n");
             continue;
         }
                 
@@ -76,7 +77,7 @@ int main(int argc, char *argv[]) {
             mx_printstr(paths[g]);
             mx_printstr(":\n");
         }
-        if(argc > 1 && argv[1][0] ==  '-') {
+        if(argc > 1 && mx_strcmp(argv[1], "-l") == 0) {
             bool total = false;
             if(S_ISDIR(temp.st_mode)) {
                 paths[g] = mx_strjoin(paths[g], "/");

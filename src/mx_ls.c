@@ -19,7 +19,7 @@ char **mx_ls(char *path) {
     struct dirent *entry;
     DIR *dir = opendir(path);
     if (!dir) {
-        mx_printerr("ls: ");
+        mx_printerr("uls: ");
         mx_printerr(path);
         mx_printerr(": No such file or directory\n");
         exit(0);
@@ -41,7 +41,7 @@ char **mx_ls(char *path) {
 
     dir = opendir(path);
     if (!dir) {
-        mx_printerr("ls: ");
+        mx_printerr("uls: ");
         mx_printerr(path);
         mx_printerr(": No such file or directory\n");
         exit(0);
