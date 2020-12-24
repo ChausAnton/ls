@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
             continue;
         }
                 
-        if(mx_strcmp(paths[g], "./") != 0 && (paths[g + 1] != NULL || g >= 1)) {
+        if(mx_strcmp(paths[g], "./") != 0 && (paths[g + 1] != NULL || g >= 1) && S_ISDIR(temp.st_mode)) {
             mx_printstr(paths[g]);
             mx_printstr(":\n");
         }
