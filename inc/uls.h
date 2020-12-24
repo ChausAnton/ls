@@ -29,6 +29,7 @@ typedef struct t_ls_l {
 #include "ashpigunov.h"
 
 
+void mx_sort_ls(char **);
 
 char **mx_ls(char *);
 

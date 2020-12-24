@@ -42,6 +42,8 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    mx_sort_ls(paths);
+
     for(int g = 0; paths[g] != NULL; g++) {
         char **arr = mx_ls(paths[g]);
         
