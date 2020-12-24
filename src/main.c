@@ -70,25 +70,7 @@ int main(int argc, char *argv[]) {
 
     mx_sort_ls(paths);
     mx_sort_by_dir(paths);
-    
-    for(int g = 0; paths[g] != NULL; g++) {
-        struct stat temp;
-        if(stat(paths[g], &temp) == -1) {
-            mx_printerr("uls: ");
-            mx_printerr(paths[g]);
-            mx_printerr(": No such file or directory\n");
-            continue;
-        }
-        if(S_ISDIR(temp.st_mode)) {
-            //arr = mx_ls(paths[g]);   
-            continue;
-        }
-        else if (argc > 1 && (argv[1][0] != '-' || argv[1][1] != 'l')) {
-            mx_printstr(paths[g]);
-            mx_printstr("\n");
-            continue;
-        }
-    }
+
     for(int g = 0; paths[g] != NULL; g++) {
         struct stat temp;
         if(stat(paths[g], &temp) == -1) {
@@ -102,9 +84,16 @@ int main(int argc, char *argv[]) {
             arr = mx_ls(paths[g]);   
         }
         else if (argc > 1 && (argv[1][0] != '-' || argv[1][1] != 'l')) {
+            mx_printstr(paths[g]);
+            mx_printstr("\n");
+            
+            struct stat tmp_check;
+            stat(paths[g+1], &tmp_check);
+            if(!S_ISDIR(temp.st_mode) && S_ISDIR(tmp_check.st_mode)) {
+                mx_printstr("\n");
+            }  
             continue;
-        }
-                
+        } 
         if(mx_strcmp(paths[g], "./") != 0 && (paths[g + 1] != NULL || g >= 1) && S_ISDIR(temp.st_mode)) {
             mx_printstr(paths[g]);
             mx_printstr(":\n");
