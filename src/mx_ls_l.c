@@ -80,6 +80,12 @@ void mx_print_time(char *t, struct stat *Stat) {
     mx_printstr(" ");
 }
 
+int mx_arr_size(char **arr) {
+    int i = 0;
+    for(;arr[i] != NULL; i++);
+    return i;
+}
+
 void mx_ls_l(char **files) {
     size_t size = 1;
     unsigned int total = 0;
@@ -121,7 +127,11 @@ void mx_ls_l(char **files) {
         ls_l[i]->name = str_name(&Stat);
         ls_l[i]->grup = print_grup(&Stat);
         ls_l[i]->size = mx_itoa(Stat.st_size);
-        ls_l[i]->file_name = mx_strdup(files[i]);
+
+        char **temp = mx_strsplit(files[i], '/');
+        ls_l[i]->file_name = mx_strdup(temp[mx_arr_size(temp) - 1]);
+
+        clean_str_arr(temp);
     }
     print_ls_l(ls_l);
 }
