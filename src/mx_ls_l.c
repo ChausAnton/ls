@@ -86,12 +86,12 @@ int mx_arr_size(char **arr) {
     return i;
 }
 
-void mx_ls_l(char **files) {
+void mx_ls_l(char **files, bool istotal) {
     size_t size = 1;
     unsigned int total = 0;
     for(int i = 0; files[i] != NULL; i++) {
         struct stat Stat;
-    
+
         int check = lstat(files[i], &Stat);
 
         if(check == -1) {
@@ -108,9 +108,11 @@ void mx_ls_l(char **files) {
     }
     ls_l[size - 1] = NULL;
 
-    mx_printstr("total ");
-    mx_printint(total);
-    mx_printstr("\n");
+    if(istotal) {
+        mx_printstr("total ");
+        mx_printint(total);
+        mx_printstr("\n");
+    }
 
     for(int i = 0; files[i] != NULL; i++) {
         struct stat Stat;

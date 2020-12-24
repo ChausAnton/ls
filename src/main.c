@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
     if(argc > 2) {
         int j = 0;
         int i = 0;
-        if (mx_strcmp(argv[1], "-l") == 0) {
+        if (argc > 1 && mx_strcmp(argv[1], "-l") == 0) {
             i = 2;
         }
         else{
@@ -45,19 +45,40 @@ int main(int argc, char *argv[]) {
     mx_sort_ls(paths);
 
     for(int g = 0; paths[g] != NULL; g++) {
-        char **arr = mx_ls(paths[g]);
-        
+        struct stat temp;
+        if(stat(paths[g], &temp) == -1) {
+            mx_printstr("no file\n");
+            exit(0);
+        }
+        char **arr;
+        if(S_ISDIR(temp.st_mode)) {
+            arr = mx_ls(paths[g]);   
+        }
+        else if (argc > 1 && mx_strcmp(argv[1], "-l") != 0) {
+            mx_printstr(paths[g]);
+            continue;
+        }
+                
         if(mx_strcmp(paths[g], "./") != 0 && (paths[g + 1] != NULL || g >= 1)) {
             mx_printstr(paths[g]);
             mx_printstr(":\n");
         }
-
         if(argc > 1 && mx_strcmp(argv[1], "-l") == 0) {
-            paths[g] = mx_strjoin(paths[g], "/");
-            for(int i = 0; arr[i] != NULL; i++) {
-                arr[i] = mx_strjoin(paths[g], arr[i]);
+            bool total = false;
+            if(S_ISDIR(temp.st_mode)) {
+                paths[g] = mx_strjoin(paths[g], "/");
+                for(int i = 0; arr[i] != NULL; i++) {
+                    arr[i] = mx_strjoin(paths[g], arr[i]);
+                }
+                total = true;
             }
-            mx_ls_l(arr);
+            else{
+                arr = (char **) malloc(2 *  sizeof(char *));
+                arr[1] = NULL;
+                arr[0] = mx_strdup(paths[g]);
+            }
+            
+            mx_ls_l(arr, total);
         }
         else {
             for(int i = 0; arr[i] != NULL; i++) {
