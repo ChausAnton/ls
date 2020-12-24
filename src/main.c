@@ -54,7 +54,6 @@ int main(int argc, char *argv[]) {
     }
 
     mx_sort_ls(paths);
-
     for(int g = 0; paths[g] != NULL; g++) {
         struct stat temp;
         if(stat(paths[g], &temp) == -1) {
@@ -63,13 +62,29 @@ int main(int argc, char *argv[]) {
             mx_printerr(": No such file or directory\n");
             continue;
         }
-        char **arr;
-        if(S_ISDIR(temp.st_mode)) {
-            arr = mx_ls(paths[g]);   
-        }
-        else if (argc > 1 && mx_strcmp(argv[1], "-l") != 0) {
+        if(S_ISDIR(temp.st_mode)) {  
+            continue;
+        } else if (argc > 1 && mx_strcmp(argv[1], "-l") != 0) {
             mx_printstr(paths[g]);
             mx_printstr("\n");
+            continue;
+        }
+    }
+    for(int g = 0; paths[g] != NULL; g++) {
+        struct stat temp;
+        if(stat(paths[g], &temp) == -1) {
+            mx_printerr("uls: ");
+            mx_printerr(paths[g]);
+            mx_printerr(": No such file or directory\n");
+            continue;
+        }
+        char **arr = NULL;
+        if(S_ISDIR(temp.st_mode)) {
+            arr = mx_ls(paths[g]);   
+            //continue;
+        } else if (argc > 1 && mx_strcmp(argv[1], "-l") != 0) {
+            //mx_printstr(paths[g]);
+            //mx_printstr("\n");
             continue;
         }
                 
