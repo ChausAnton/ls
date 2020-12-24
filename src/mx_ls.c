@@ -7,7 +7,6 @@ void mx_sort_ls(char **files) {
 				void *tmp = files[i];
 				files[i] = files[j];
 				files[j] = tmp;
-				
 			}
 		}
 	}

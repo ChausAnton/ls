@@ -8,6 +8,22 @@ void clean_str_arr(char **arr) {
     arr = NULL;
 }
 
+void mx_sort_by_dir(char **paths){
+    for (int i = 0; paths[i] != NULL; i++) {
+		for (int j = 0; paths[j+1] != NULL; j++) {
+            struct stat temp;
+            struct stat temp1;
+            stat(paths[j], &temp);
+            stat(paths[j+1], &temp1);
+            if(S_ISDIR(temp.st_mode) && !S_ISDIR(temp1.st_mode)) {  
+                void *tmp = paths[j];
+				paths[j] = paths[j+1];
+				paths[j+1] = tmp;
+            }   
+		}
+	}   
+}
+
 int main(int argc, char *argv[]) {
     
     char *legal_flags = mx_strdup("l");
@@ -53,7 +69,8 @@ int main(int argc, char *argv[]) {
     }
 
     mx_sort_ls(paths);
-
+    mx_sort_by_dir(paths);
+    
     for(int g = 0; paths[g] != NULL; g++) {
         struct stat temp;
         if(stat(paths[g], &temp) == -1) {
@@ -62,13 +79,29 @@ int main(int argc, char *argv[]) {
             mx_printerr(": No such file or directory\n");
             continue;
         }
-        char **arr;
         if(S_ISDIR(temp.st_mode)) {
-            arr = mx_ls(paths[g]);   
+            //arr = mx_ls(paths[g]);   
+            continue;
         }
         else if (argc > 1 && (argv[1][0] != '-' || argv[1][1] != 'l')) {
             mx_printstr(paths[g]);
             mx_printstr("\n");
+            continue;
+        }
+    }
+    for(int g = 0; paths[g] != NULL; g++) {
+        struct stat temp;
+        if(stat(paths[g], &temp) == -1) {
+            mx_printerr("uls: ");
+            mx_printerr(paths[g]);
+            mx_printerr(": No such file or directory\n");
+            continue;
+        }
+        char **arr = NULL;
+        if(S_ISDIR(temp.st_mode)) {
+            arr = mx_ls(paths[g]);   
+        }
+        else if (argc > 1 && (argv[1][0] != '-' || argv[1][1] != 'l')) {
             continue;
         }
                 
