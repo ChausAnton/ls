@@ -130,7 +130,7 @@ void mx_ls_l(char **files, bool istotal) {
         ls_l[i]->grup = print_grup(&Stat);
         ls_l[i]->size = mx_itoa(Stat.st_size);
 
-        if(S_ISDIR(Stat.st_mode)) {
+        if(istotal) {
             char **temp = mx_strsplit(files[i], '/');
             ls_l[i]->file_name = mx_strdup(temp[mx_arr_size(temp) - 1]);
             clean_str_arr(temp);
