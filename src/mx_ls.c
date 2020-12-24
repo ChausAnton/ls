@@ -19,7 +19,9 @@ char **mx_ls(char *path) {
     struct dirent *entry;
     DIR *dir = opendir(path);
     if (!dir) {
-        mx_printerr("error with open file\n");
+        mx_printerr("ls: ");
+        mx_printerr(path);
+        mx_printerr(": No such file or directory\n");
         exit(0);
     }
     while ((entry = readdir(dir)) != NULL) {
@@ -39,7 +41,9 @@ char **mx_ls(char *path) {
 
     dir = opendir(path);
     if (!dir) {
-        mx_printerr("error with open file\n");
+        mx_printerr("ls: ");
+        mx_printerr(path);
+        mx_printerr(": No such file or directory\n");
         exit(0);
     }
     int i = 0;
