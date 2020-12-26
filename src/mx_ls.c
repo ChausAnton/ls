@@ -21,7 +21,7 @@ char **mx_ls(char *path) {
         mx_printerr("uls: ");
         mx_printerr(path);
         mx_printerr(": No such file or directory\n");
-        exit(0);
+        exit(1);
     }
     while ((entry = readdir(dir)) != NULL) {
         if(entry->d_name[0] != '.') {
@@ -30,7 +30,7 @@ char **mx_ls(char *path) {
     }
 
     if(closedir(dir) == -1) {
-        mx_printerr("error while close file\n");
+        exit(1);
     }
 
     char **files = (char **) malloc((size + 1) * sizeof(char *));
@@ -43,7 +43,7 @@ char **mx_ls(char *path) {
         mx_printerr("uls: ");
         mx_printerr(path);
         mx_printerr(": No such file or directory\n");
-        exit(0);
+        exit(1);
     }
     int i = 0;
     while ((entry = readdir(dir)) != NULL) {

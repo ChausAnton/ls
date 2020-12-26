@@ -7,7 +7,7 @@ char *mx_file_to_str(const char *filename) {
 		mx_printerr("error: file ");
         mx_printerr(filename);
         mx_printerr(" does not exist\n");
-        exit(0);
+        exit(1);
     }
 
     int size = 0;

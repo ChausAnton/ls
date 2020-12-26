@@ -25,7 +25,7 @@ void mx_sort_by_dir(char **paths){
 }
 
 int main(int argc, char *argv[]) {
-    
+    bool was_error = false;
     char *legal_flags = mx_strdup("l");
     if(argc > 1 && argv[1][0] == '-') {
         for(int i =1; argv[1][i]; i++){
@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
                 mx_printerr("uls: illegal option -- ");
                 write(2, &argv[1][i], 1);
                 mx_printerr("\nusage: uls [-l] [file ...]\n");
-                exit(0);
+                exit(1);
             }
         }
     }
@@ -77,6 +77,7 @@ int main(int argc, char *argv[]) {
             mx_printerr("uls: ");
             mx_printerr(paths[g]);
             mx_printerr(": No such file or directory\n");
+            was_error = true;
             continue;
         }
         char **arr = NULL;
@@ -142,5 +143,9 @@ int main(int argc, char *argv[]) {
         if(paths[g + 1] != NULL) mx_printstr("\n");
     }
     clean_str_arr(paths);
+
+    if(was_error) {
+        exit(1);
+    }
 }
 

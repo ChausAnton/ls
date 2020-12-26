@@ -96,7 +96,7 @@ void mx_ls_l(char **files, bool istotal) {
 
         if(check == -1) {
             mx_printerr("problem with reading stats\n");
-            exit(0);
+            exit(1);
         }
         size++;
         total += Stat.st_blocks;
@@ -121,7 +121,7 @@ void mx_ls_l(char **files, bool istotal) {
 
         if(check == -1) {
             mx_printerr("problem with reading stats\n");
-            exit(0);
+            exit(1);
         }
         ls_l[i]->stat = Stat;
         ls_l[i]->chmod = mx_strdup(mx_str_per(&Stat, files[i]));
