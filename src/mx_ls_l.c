@@ -130,7 +130,21 @@ void mx_ls_l(char **files, bool istotal) {
         ls_l[i]->grup = print_grup(&Stat);
         ls_l[i]->size = mx_itoa(Stat.st_size);
 
-        if(istotal) {
+        if (S_ISLNK(Stat.st_mode)) {
+            char link_buf[1024];
+            ssize_t len;
+            if ((len = readlink(files[i], link_buf, sizeof(link_buf)-1)) != -1) {
+                char **temp = mx_strsplit(files[i], '/');
+                ls_l[i]->file_name = mx_strdup(temp[mx_arr_size(temp) - 1]);
+                clean_str_arr(temp);
+                
+                link_buf[len] = '\0';
+                ls_l[i]->file_name = mx_strjoin(ls_l[i]->file_name, " -> ");
+                ls_l[i]->file_name = mx_strjoin(ls_l[i]->file_name, link_buf);
+                
+            }
+        }
+        else if(istotal) {
             char **temp = mx_strsplit(files[i], '/');
             ls_l[i]->file_name = mx_strdup(temp[mx_arr_size(temp) - 1]);
             clean_str_arr(temp);
