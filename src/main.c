@@ -73,10 +73,17 @@ int main(int argc, char *argv[]) {
 
     for(int g = 0; paths[g] != NULL; g++) {
         struct stat temp;
-        if(stat(paths[g], &temp) == -1) {
+        DIR *dir = opendir(paths[g]);
+        if (!dir) {
             mx_printerr("uls: ");
             mx_printerr(paths[g]);
             mx_printerr(": No such file or directory\n");
+            exit(1);
+        }
+        if(stat(paths[g], &temp) == -1) {
+            mx_printerr("uls: ");
+            mx_printerr(paths[g]);
+            mx_printerr(": Permission denied\n");
             was_error = true;
             continue;
         }
