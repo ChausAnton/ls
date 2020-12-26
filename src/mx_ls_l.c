@@ -31,6 +31,21 @@ char mx_listxattr(char *file) {
     return (' ');
 }
 
+char check_chmode1(char chmod) {
+    if (chmod == '-')
+        return chmod = 'S';
+    else
+        return chmod = 's';
+}
+
+char check_chmode2(char *chmod) {
+    if (chmod[9] == '-')
+        return chmod[9] = 'T';
+    else
+        return chmod[9] = 't';
+}
+
+
 char *mx_str_per(struct stat *Stat, char *file) {
     char chmod[12];
     chmod[0] = mx_check_per(Stat);
@@ -45,6 +60,9 @@ char *mx_str_per(struct stat *Stat, char *file) {
     chmod[9] = (S_IXOTH & Stat->st_mode) ? 'x' : '-';
     chmod[10] = mx_listxattr(file);
     chmod[11] = '\0';
+    S_ISUID & Stat->st_mode? chmod[3] = check_chmode1(chmod[3]) : 0;
+    S_ISGID & Stat->st_mode ? chmod[6] = check_chmode1(chmod[6]) : 0;
+    S_ISVTX & Stat->st_mode ? chmod[9] = check_chmode2(chmod) : 0;
     char *tmp = mx_strdup(chmod);
     return tmp;
 }
