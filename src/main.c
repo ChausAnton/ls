@@ -129,8 +129,10 @@ int main(int argc, char *argv[]) {
                 g--;
                 arr[size] = NULL;
             }
-            
-            mx_ls_l(arr, total);
+
+            if(*arr != NULL) {
+                mx_ls_l(arr, total);
+            }
         }
         else {
             for(int i = 0; arr[i] != NULL; i++) {
